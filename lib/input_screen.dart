@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:test_mobigic/search_screen.dart';
+import 'package:test_mobigic/grid_input_screen.dart';
 
 class InputScreen extends StatefulWidget {
   const InputScreen({super.key});
@@ -48,11 +48,10 @@ class _InputScreenState extends State<InputScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SerachScreen(rows: m, columns: n),
+                      builder: (context) => GridInputScreen(rows: m, columns: n),
                     ),
                   );
                 } else {
-                  // Show error message
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(

@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Grid Search',
+      title: 'Mobigic Task',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

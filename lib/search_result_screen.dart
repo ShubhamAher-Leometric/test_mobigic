@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ResultScreen extends StatefulWidget {
+class SearchResultScreen extends StatefulWidget {
   final int rows;
   final int columns;
   final List<List<String>> grid;
 
-  ResultScreen({Key? key, required this.rows, required this.columns, required this.grid}) : super(key: key);
+  SearchResultScreen({Key? key, required this.rows, required this.columns, required this.grid}) : super(key: key);
 
   @override
-  _ResultScreenState createState() => _ResultScreenState();
+  _SearchResultScreenState createState() => _SearchResultScreenState();
 }
 
-class _ResultScreenState extends State<ResultScreen> {
-  String searchText = ''; // Initialize searchText
+class _SearchResultScreenState extends State<SearchResultScreen> {
+  String searchText = '';
 
   List<String> searchResult = [];
 
@@ -24,7 +24,6 @@ class _ResultScreenState extends State<ResultScreen> {
       ),
       body: Column(
         children: [
-          // Text input and search button
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
@@ -33,7 +32,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   child: TextField(
                     onChanged: (value) {
                       setState(() {
-                        searchText = value; // Update searchText
+                        searchText = value;
                         search();
                       });
                     },
@@ -53,7 +52,6 @@ class _ResultScreenState extends State<ResultScreen> {
               ],
             ),
           ),
-          // Display the grid
           Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -66,9 +64,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 String alphabet = widget.grid[row][column];
                 bool isHighlighted = searchResult.contains("$row$column");
                 return GestureDetector(
-                  onTap: () {
-                    // Handle tap on grid cell
-                  },
+                  onTap: () {},
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(),

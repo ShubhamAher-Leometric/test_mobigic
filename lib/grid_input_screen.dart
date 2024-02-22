@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:test_mobigic/resultscreen.dart';
+import 'package:test_mobigic/search_result_screen.dart';
 
-class SerachScreen extends StatefulWidget {
+class GridInputScreen extends StatefulWidget {
   final int rows;
   final int columns;
 
-  // SerachScreen({required this.rows, required this.columns});
-  const SerachScreen({super.key, required this.rows, required this.columns});
+  const GridInputScreen({Key? key, required this.rows, required this.columns}) : super(key: key);
 
   @override
-  State<SerachScreen> createState() => _SerachScreenState();
+  State<GridInputScreen> createState() => _GridInputScreenState();
 }
 
-class _SerachScreenState extends State<SerachScreen> {
+class _GridInputScreenState extends State<GridInputScreen> {
   List<List<String>> grid = [];
 
   @override
   void initState() {
     super.initState();
-    // Initialize the grid with empty strings
     for (int i = 0; i < widget.rows; i++) {
       grid.add(List<String>.filled(widget.columns, ''));
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Grid Search'),
+        title: Text('Enter Alphabets'),
       ),
       body: Column(
         children: [
-          // Grid Input
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -43,12 +41,18 @@ class _SerachScreenState extends State<SerachScreen> {
                 itemBuilder: (context, index) {
                   int row = index ~/ widget.columns;
                   int column = index % widget.columns;
-                  return TextField(
-                    onChanged: (value) {
-                      grid[row][column] = value;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 4.0, // Adjust vertical padding
+                      horizontal: 2.0, // Adjust horizontal padding
+                    ),
+                    child: TextField(
+                      onChanged: (value) {
+                        grid[row][column] = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   );
                 },
@@ -58,7 +62,6 @@ class _SerachScreenState extends State<SerachScreen> {
           // Create Grid Button
           ElevatedButton(
             onPressed: () {
-              // Check if all positions are filled
               bool allFilled = true;
               for (var row in grid) {
                 if (row.contains('')) {
@@ -67,11 +70,10 @@ class _SerachScreenState extends State<SerachScreen> {
                 }
               }
               if (allFilled) {
-                // Navigate to the search screen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ResultScreen(
+                    builder: (context) => SearchResultScreen(
                       rows: widget.rows,
                       columns: widget.columns,
                       grid: grid,
@@ -79,12 +81,11 @@ class _SerachScreenState extends State<SerachScreen> {
                   ),
                 );
               } else {
-                // Show error message
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: Text('Error'),
-                    content: Text('Please fill all positions with alphabets.'),
+                    content: Text('Please fill all Grids with alphabets.'),
                     actions: [
                       TextButton(
                         onPressed: () {
@@ -103,5 +104,4 @@ class _SerachScreenState extends State<SerachScreen> {
       ),
     );
   }
-  }
-
+}
