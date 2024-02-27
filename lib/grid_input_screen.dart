@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:test_mobigic/search_result_screen.dart';
 
 class GridInputScreen extends StatefulWidget {
@@ -47,10 +48,14 @@ class _GridInputScreenState extends State<GridInputScreen> {
                       horizontal: 2.0, // Adjust horizontal padding
                     ),
                     child: TextField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')), // Allow only alphabets
+                      ],
                       onChanged: (value) {
                         grid[row][column] = value;
                       },
                       decoration: InputDecoration(
+                        hintText: 'Enter alphabet/Word', // Add hint text
                         border: OutlineInputBorder(),
                       ),
                     ),

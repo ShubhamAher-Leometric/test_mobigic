@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final int rows;
   final int columns;
   final List<List<String>> grid;
 
-  SearchResultScreen({Key? key, required this.rows, required this.columns, required this.grid}) : super(key: key);
+  SearchResultScreen({
+    Key? key,
+    required this.rows,
+    required this.columns,
+    required this.grid,
+  }) : super(key: key);
 
   @override
   _SearchResultScreenState createState() => _SearchResultScreenState();
@@ -13,8 +19,6 @@ class SearchResultScreen extends StatefulWidget {
 
 class _SearchResultScreenState extends State<SearchResultScreen> {
   String searchText = '';
-
-  List<String> searchResult = [];
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +34,12 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               children: [
                 Expanded(
                   child: TextField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')), // Allow only alphabets
+                    ],
                     onChanged: (value) {
                       setState(() {
                         searchText = value;
-                        search();
                       });
                     },
                     decoration: InputDecoration(
@@ -43,9 +49,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      search();
-                    });
+                    setState(() {});
                   },
                   child: Text('Search'),
                 ),
@@ -62,16 +66,16 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 int row = index ~/ widget.columns;
                 int column = index % widget.columns;
                 String alphabet = widget.grid[row][column];
-                bool isHighlighted = searchResult.contains("$row$column");
+                List<bool> highlights = _getLetterHighlights(alphabet);
                 return GestureDetector(
                   onTap: () {},
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(),
-                      color: isHighlighted ? Colors.yellow : Colors.white,
+                      color: _shouldHighlight(highlights) ? Colors.yellow : Colors.white,
                     ),
                     alignment: Alignment.center,
-                    child: Text(alphabet),
+                    child: _buildHighlightedText(alphabet, highlights),
                   ),
                 );
               },
@@ -82,16 +86,43 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     );
   }
 
-  void search() {
-    setState(() {
-      searchResult.clear();
-      for (int i = 0; i < widget.rows; i++) {
-        for (int j = 0; j < widget.columns; j++) {
-          if (widget.grid[i][j] == searchText) {
-            searchResult.add("$i$j");
-          }
+  List<bool> _getLetterHighlights(String alphabet) {
+    List<bool> highlights = List.filled(alphabet.length, false);
+    for (int i = 0; i <= alphabet.length - searchText.length; i++) {
+      if (alphabet.substring(i, i + searchText.length).toLowerCase() == searchText.toLowerCase()) {
+        for (int j = i; j < i + searchText.length; j++) {
+          highlights[j] = true;
         }
       }
-    });
+    }
+    return highlights;
+  }
+
+  bool _shouldHighlight(List<bool> highlights) {
+    for (bool highlight in highlights) {
+      if (highlight) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  Widget _buildHighlightedText(String alphabet, List<bool> highlights) {
+    List<Widget> letters = [];
+    for (int i = 0; i < alphabet.length; i++) {
+      letters.add(
+        Text(
+          alphabet[i],
+          style: TextStyle(
+            color: highlights[i] ? Colors.red : Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: letters,
+    );
   }
 }
